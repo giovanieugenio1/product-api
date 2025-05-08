@@ -44,5 +44,11 @@ jobs:
       - name: Build aplicação
         run: ./mvnw clean package -DskipTests -Dspring.profiles.active=prod
 
+      - name: Login Docker Hub
+        run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
       - name: Gerar imagem Docker
-        run: docker build -t product-api .
+        run: docker build -t 4{{ secrets.DOCKER_HUB_USERNAME }}/product-api:latest .
+
+      - name: Push imagem Docker
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/product-api:latest
